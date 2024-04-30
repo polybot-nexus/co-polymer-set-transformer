@@ -1,6 +1,6 @@
-# Image of the architecture
-
-
+# Co-polymer Set Transformer
+A transformer model designed for enabling CIELab and Absorption spectra prediction for electrochromic polymers (ECPs)
+<img src="toc.jpg" >
 
 
 # Installation
@@ -23,12 +23,9 @@ The use of the Abs decoder is optionnal
 
 The input dataset should have the following format:
 
-|               |    momomer1_smiles                                                        |     momomer2_smiles                                                                       |     momomer3_smiles     |
-|---------------|-------------------------------------------------------------------------------|----------------------------------------------|-------------------------------------------------|
-|     c1sc(*)c2OCC(COCCCCCCCC)(COCCCCCCCC)COc12        |     *c4ccc(c2ccc(c1ccc(*)s1)c3nsnc23)s4         |     *c1ccc(*)c2nsnc12         |                                                 |
-
-
-
+smiles1 | percentage_1 | smiles2 |  percentage_2 | smiles3 | percentage_3 | L | a | b | wavelength | intensity 
+--- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- 
+c1sc(*)c2OCC(COCCCCCCCC)(COCCCCCCCC)COc12  | 0.5 | *c4ccc(c2ccc(c1ccc(*)s1)c3nsnc23)s4 | 0.3 | *c1ccc(*)c2nsnc12 | 0.2 | 80 | 60 | 30 | 350, 351,...,800 | 0.01,0.012,...,0.20 
 
 # Train your own models based on the prefered monomer representation
 
