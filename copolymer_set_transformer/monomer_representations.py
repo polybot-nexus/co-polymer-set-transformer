@@ -45,11 +45,18 @@ def get_dft_descriptors_dictionary(dft_calculations_file):
     return dictionary, data_dft.columns.values[1:]
 
 
-def smile_to_dft(smile, dictionary):
+
+def dft_descr_from_df(smiles, prefix):
+  df = pd.DataFrame(dft_descr(smiles))
+
+  df.columns =[f'{prefix}_{i}' for i in descriptor_names] 
+  return df
+
+def smile_to_dft(smile):
   return dictionary[smile]
 
 
-def dft_descr(smiles, descriptor_names):
+def dft_descr(smiles):
   bits = []
   for smile in smiles:
     try:
@@ -57,13 +64,6 @@ def dft_descr(smiles, descriptor_names):
     except:
       bits.append(np.zeros(len(descriptor_names)))
   return bits
-
-
-def dft_descr_from_df(smiles, prefix, descriptor_names):
-  df = pd.DataFrame(dft_descr(smiles, descriptor_names))
-
-  df.columns =[f'{prefix}_{i}' for i in descriptor_names] 
-  return df
 
 
 def smile_to_bits(smile):
@@ -90,4 +90,4 @@ def get_train_data_representation_dft(dataframe):
    return dataset
 
 
-# dictionary , descriptor_names= get_dft_descriptors_dictionary('/datasets/dft_descriptors_ECPs.csv')
+dictionary , descriptor_names= get_dft_descriptors_dictionary('datasets/dft_descriptors_ECPs.csv')
