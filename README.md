@@ -27,6 +27,8 @@ smiles1 | percentage_1 | smiles2 |  percentage_2 | smiles3 | percentage_3 | L | 
 --- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- 
 c1sc(*)c2OCC(COCCCCCCCC)(COCCCCCCCC)COc12  | 0.5 | *c4ccc(c2ccc(c1ccc(*)s1)c3nsnc23)s4 | 0.3 | *c1ccc(*)c2nsnc12 | 0.2 | 80 | 60 | 30 | 350, 351,...,800 | 0.01,0.012,...,0.20 
 
+The two last columns, i.e., wavelength and intensity can be omitted if only the first decoder for CIELab prediction is used.
+
 # Train your own models based on the prefered monomer representation
 
     python train.py --model <model> --training_data <data> --save_dir <save_dir> -n_epochs <epochs> -lr <learning_rate> --abs_prediction
@@ -40,11 +42,7 @@ c1sc(*)c2OCC(COCCCCCCCC)(COCCCCCCCC)COc12  | 0.5 | *c4ccc(c2ccc(c1ccc(*)s1)c3nsn
 - `n_epochs` The number of epochs to use for training    
 - `lr` Learning rate
 - `abs_prediction` Whether we want to include an absorption spectra prediction
-- `use wandb` We use Weight&Biases to monitor the hyperparameters during the training. This not a strict requirement but it is suggested. If you want to use it, you need to use the 'use_wandb' flag and to create an account [here](https://wandb.ai/) and install the Python package:
-
-    ```  
-    pip install wandb
-    ```
+- `use_abs_decoder` Set is to `True` to request absorption spectra prediction 
 
 Example
 

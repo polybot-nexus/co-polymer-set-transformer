@@ -60,7 +60,7 @@ def dft_descr(smiles, descriptor_names):
 
 
 def dft_descr_from_df(smiles, prefix, descriptor_names):
-  df = pd.DataFrame(dft_descr(smiles))
+  df = pd.DataFrame(dft_descr(smiles, descriptor_names))
 
   df.columns =[f'{prefix}_{i}' for i in descriptor_names] 
   return df
@@ -90,4 +90,4 @@ def get_train_data_representation_dft(dataframe):
    return dataset
 
 
-dictionary , descriptor_names= get_dft_descriptors_dictionary('/datasets/dft_descriptors_ECPs.csv')
+# dictionary , descriptor_names= get_dft_descriptors_dictionary('/datasets/dft_descriptors_ECPs.csv')
