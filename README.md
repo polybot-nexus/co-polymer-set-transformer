@@ -48,14 +48,13 @@ c1sc(*)c2OCC(COCCCCCCCC)(COCCCCCCCC)COc12  | 0.5 | *c4ccc(c2ccc(c1ccc(*)s1)c3nsn
 
 Example
 
-    python copolymer_set_transformer/train.py --model gnn --training_data csd_data/csd_cocrystals2020.csv --save_dir pretrained_models --model_name gnn_trained -n_epochs 10 -lr 0.001 --use_wandb
+    python copolymer_set_transformer/train.py --model morgan --training_data datasets/literature_only_dataset_with_abs.csv --save_dir checkpoints -n_epochs 10 -lr 0.001 --use_abs_decoder
 
 
 
 # Notebooks
 - ```1_ECPs_database_analysis.ipynb``` Plotting the statistics on our database and analysing the trends.
 - ```2_model_comparison.ipynb``` Comparison of several models on literature data.
-- ```3_fingerprint_comparison.ipynb``` We tested several representation techniques to access the best performing one.
-- ```4_sequential_learning.ipynb``` Model performance on in-house data and finetune it on new data
-- ```5_physical_insights.ipynb``` After having a full operational model we try to extract feature importances
-- ```6_autonomous_experiment.ipynb``` We used the best performing fine-tuned model to guide the autonomous experiment
+- ```3_sequential_learning.ipynb``` Model performance on in-house data and finetune it on new data
+- ```4_physical_insights.ipynb``` After having a full operational model we try to extract feature importances
+- ```5_LLM_asssistants_contition_extraction_demo.ipynb``` We used the best performing fine-tuned model to guide the autonomous experiment

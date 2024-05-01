@@ -62,7 +62,7 @@ def main():
     parser.add_argument('-n_epochs', default= 50, type = int, help='Set the number of epochs')
     parser.add_argument('-n_epochs', default= 50, type = int, help='Set the number of epochs')
     parser.add_argument('-batch_size', default= 0.001, type = float, help='Set the batch size')
-    # parser.add_argument('--use_wandb', action='store_true' ,help='Set the learning rate')
+    parser.add_argument('--use_abs_decoder', action='store_true' ,help='Use the absorption decoder')
     args = parser.parse_args()
 
     # Load the training data
