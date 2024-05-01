@@ -11,6 +11,7 @@ def smile_to_bits(smile):
   fpgen1 = rdFingerprintGenerator.GetMorganGenerator(radius=3,fpSize=1024,countSimulation=True)
   return fpgen1.GetCountFingerprintAsNumPy(mol)
 
+
 def get_vectors(smiles):
   paws = []
   for smile in smiles:
@@ -20,17 +21,19 @@ def get_vectors(smiles):
       paws.append(np.zeros(1024))
   return paws
 
+
 def bits_to_df(smiles, prefix):
   df = pd.DataFrame(get_vectors(smiles))
   columns = [f'{prefix}_{i}' for i in df.columns]
   df.columns = columns
   return df
 
+
 def get_dft_descriptors_dictionary(dft_calculations_file):
     # create a dictionary to assign the molecular features to each of the smiles stings
     data_dft = pd.read_csv(dft_calculations_file)
     data_dft = data_dft.drop(['stoichiometry','number_of_atoms','charge','multiplicity', 'E_scf', 'zero_point_correction', 'E_thermal_correction',
-        'H_thermal_correction', 'G_thermal_correction', 'E_zpe', 'E', 'H','converged',#'ES_<S**2>',
+        'H_thermal_correction', 'G_thermal_correction', 'E_zpe', 'E', 'H','converged',
         'G', ], axis=1)
     scaler = MinMaxScaler()
 
@@ -41,10 +44,12 @@ def get_dft_descriptors_dictionary(dft_calculations_file):
     dictionary = data_dft.set_index('smiles').agg(list, axis=1).to_dict()
     return dictionary, data_dft.columns.values[1:]
 
-def smile_to_dft(smile):
+
+def smile_to_dft(smile, dictionary):
   return dictionary[smile]
 
-def dft_descr(smiles):
+
+def dft_descr(smiles, descriptor_names):
   bits = []
   for smile in smiles:
     try:
@@ -53,16 +58,19 @@ def dft_descr(smiles):
       bits.append(np.zeros(len(descriptor_names)))
   return bits
 
-def dft_descr_from_df(smiles, prefix):
+
+def dft_descr_from_df(smiles, prefix, descriptor_names):
   df = pd.DataFrame(dft_descr(smiles))
 
-  df.columns =[f'{prefix}_{i}' for i in descriptor_names] # descriptor_names
+  df.columns =[f'{prefix}_{i}' for i in descriptor_names] 
   return df
+
 
 def smile_to_bits(smile):
   mol = Chem.MolFromSmiles(smile)
   fpgen1 = rdFingerprintGenerator.GetMorganGenerator(radius=3,fpSize=1024,countSimulation=True)
   return fpgen1.GetCountFingerprintAsNumPy(mol)
+
 
 def get_train_data_representation_dft(dataframe):
    """Given the dataframe with the experimental results, i.e., smiles + ratios + extracted Lab values
