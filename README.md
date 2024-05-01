@@ -1,6 +1,6 @@
 # Co-polymer Set Transformer
 A transformer model designed for enabling CIELab and Absorption spectra prediction for electrochromic polymers (ECPs)
-<img src="toc.jpg" >
+<img src="toc.png" >
 
 
 # Installation

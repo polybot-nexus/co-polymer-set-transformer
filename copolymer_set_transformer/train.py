@@ -1,117 +1,92 @@
 #!/usr/bin/env python
 # coding=utf-8
-import sys
-import json
-import tempfile
 import numpy as np
 import pandas as pd
-import os.path
 from collections import Counter
 from itertools import groupby
 import argparse
 import random
 import torch 
-from rdkit import Chem
-from rdkit.Chem import AllChem
 from copolymer_set_transformer.copolymer_set_transformer import *
 from copolymer_set_transformer.ml_modules import *
-import logging
-import math
-import os
-import sys
-from dataclasses import dataclass, field
+from sklearn.preprocessing import MinMaxScaler
 from itertools import chain
 from typing import Optional
-import datasets
-from datasets import load_dataset
+from monomer_representations import get_train_data_representation_dft
+import ast
+from scipy.signal import find_peaks, find_peaks_cwt
+import os
+from scipy.signal import savgol_filter
 
 
-
-logger = logging.getLogger(__name__)
-
-@dataclass
-class ModelArguments:
+def apply_savgol_filter(y, window_size, poly_order):
     """
-    Arguments to train the model with user provided data or test on existing datasets.
+    Apply a Savitzky-Golay filter to a 1D array.
+
+    Parameters:
+    y (array_like): The input signal.
+    window_size (int): The size of the moving window. Must be odd.
+    poly_order (int): The order of the polynomial used to fit the samples.
+
+    Returns:
+    numpy.ndarray: The smoothed signal.
     """
+    return savgol_filter(y, window_size, poly_order)
 
-    model_name_or_path: Optional[str] = field(
-        default=None,
-        metadata={
-            "help": "The model checkpoint for weights initialization."
-            "Don't set if you want to train a model from scratch."
-        },
-    )
-    model_type: Optional[str] = field(
-        default=None,
-        metadata={"help": "If training from scratch, pass a model type from the list: " + ", ".join(MODEL_TYPES)},
-    )
-    config_overrides: Optional[str] = field(
-        default=None,
-        metadata={
-            "help": "Override some existing default config settings when a model is trained from scratch. Example: "
-            "n_embd=10,resid_pdrop=0.2,scale_attn_weights=false,summary_type=cls_index"
-        },
-    )
-    config_name: Optional[str] = field(
-        default=None, metadata={"help": "Pretrained config name or path if not the same as model_name"}
-    )
+def set_seed():
+  seed = 0
+  random.seed(seed)
+  np.random.seed(seed)
+  torch.manual_seed(seed)
 
-    use_auth_token: bool = field(
-        default=False,
-        metadata={
-            "help": "Will use the token generated when running `transformers-cli login` (necessary to use this script "
-            "with private models)."
-        },
-    )
+def get_smoothed_intensity(dataset, window_size=30, poly_order=3):
+    df_y = []
+    for i in range(dataset.shape[0]):
+        y=apply_savgol_filter(ast.literal_eval(dataset.intensity[i]), window_size, poly_order)
+        df_y.append(y)
+    return df_y
 
-    def __post_init__(self):
-        if self.config_overrides is not None and (self.config_name is not None or self.model_name_or_path is not None):
-            raise ValueError(
-                "--config_overrides can't be used in combination with --config_name or --model_name_or_path"
-            )
-
-
-@dataclass
-class DataTrainingArguments:
-    """
-    Arguments pertaining to what data we are going to input our model for training and eval.
-    """
-
-    dataset_name: Optional[str] = field(
-        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
-    )
-    dataset_config_name: Optional[str] = field(
-        default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
-    )
-    train_file: Optional[str] = field(default=None, metadata={"help": "The input training data file (a text file)."})
-    validation_file: Optional[str] = field(
-        default=None,
-        metadata={"help": "An optional input evaluation data file to evaluate the perplexity on (a text file)."},
-    )
-    overwrite_cache: bool = field(
-        default=False, metadata={"help": "Overwrite the cached training and evaluation sets"}
-    )
-    validation_split_percentage: Optional[int] = field(
-        default=5,
-        metadata={
-            "help": "The percentage of the train set used as validation set in case there's no validation split"
-        },
-    )
-
+def get_scaled_lab(dataset):
+    df_y_external = dataset[['L* (Colored State)' ,'a* (Colored State)', 'b*(Colored State)']]
+    scalery = MinMaxScaler().fit(df_y_external.values)
+    external_val_lab_scaled = scalery.transform(df_y_external)
+    return external_val_lab_scaled
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--model', default= 'morgan', choices = ['gnn', 'morgan', 'chemberta', 'mordred'] , help='The model to use for training')
     parser.add_argument('--training_data', help='The csv file with the training smiles pairs')
+    parser.add_argument('--dropout_ratio', help='Set the dropout_ratio')
     parser.add_argument('--save_dir', help='The directory to save the trained network')
     parser.add_argument('--model_name', help='Name of the trained network')
     parser.add_argument('-n_epochs', default= 50, type = int, help='Set the number of epochs')
-    parser.add_argument('-lr', default= 0.001, type = float, help='Set the learning rate')
-    parser.add_argument('--use_wandb', action='store_true' ,help='Set the learning rate')
+    parser.add_argument('-n_epochs', default= 50, type = int, help='Set the number of epochs')
+    parser.add_argument('-batch_size', default= 0.001, type = float, help='Set the batch size')
+    # parser.add_argument('--use_wandb', action='store_true' ,help='Set the learning rate')
     args = parser.parse_args()
 
-    #set_seed()
-   
-#if __name__ == "__main__":
-#    main()
+    # Load the training data
+    electrochromics = args.training_data
+    electrochromics['smiles_A'] = electrochromics['smiles_A'].str.replace('*', 'C')
+    electrochromics['smiles_B'] = electrochromics['smiles_B'].str.replace('*', 'C')
+    electrochromics['smiles_C'] = electrochromics['smiles_C'].str.replace('*', 'C')
+    df = electrochromics[['smiles_A', 'Percentage of A %', 'smiles_B' , 'Percentage of B %', 'smiles_C', 'Percentage of C %', 'L* (Colored State)', 'a* (Colored State)', 'b*(Colored State)', 'wavelength', 'intensity']]
+    df['Percentage of A %'] = df['Percentage of A %']/100
+    df['Percentage of B %'] = df['Percentage of B %']/100
+    df['Percentage of C %'] = df['Percentage of C %']/100
+    df_external = df.dropna(axis=0)
+    training_dataset = get_train_data_representation_dft(df_external)
+    Ndims = int(training_dataset.shape[1]/3)
+
+    device ='cpu'
+    model = CoPolymerSetTransformer(args.dropout_ratio, device, args.n_epochs, args.lr, args.batch_size, use_abs_decoder=False)
+    # Prepare your data
+    train_data_1, train_data_2, train_data_3= np.array(training_dataset.iloc[:, :Ndims].values, dtype=float), np.array(training_dataset.iloc[:, Ndims:2*Ndims].values, dtype=float), np.array(training_dataset.iloc[:, 2*Ndims:].values, dtype=float)
+    y_lab = np.array(get_scaled_lab(electrochromics), dtype=np.float16)
+    y_abs = np.array(get_smoothed_intensity(electrochromics), dtype=np.float16)
+    # Train the model
+    losses1, losses2 = model.train_model(train_data_1, train_data_2,train_data_3, y_lab, y_abs)
+    model._save_to_state_dict(args.save_dir)
+
+if __name__ == "__main__":
+   main()
