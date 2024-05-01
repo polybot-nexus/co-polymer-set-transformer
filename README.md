@@ -41,13 +41,11 @@ The two last columns, i.e., wavelength and intensity can be omitted if only the 
 - `save_dir` The directory to save the trained model 
 - `n_epochs` The number of epochs to use for training    
 - `lr` Learning rate
-- `abs_prediction` Whether we want to include an absorption spectra prediction
 - `use_abs_decoder` Set is to `True` to request absorption spectra prediction 
 
 Example
 
     python copolymer_set_transformer/train.py --model morgan --training_data datasets/literature_only_dataset_with_abs.csv --save_dir checkpoints -n_epochs 10 -lr 0.001 --use_abs_decoder
-
 
 
 # Notebooks
