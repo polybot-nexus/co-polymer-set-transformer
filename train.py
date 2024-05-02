@@ -3,19 +3,14 @@
 #python train.py --training_data "datasets/electrochromics_in_house_experiments_with_abs.csv" --save_dir checkpoints -n_epochs 10 -lr 0.01 --dropout_ratio 0.15
 import numpy as np
 import pandas as pd
-from collections import Counter
-from itertools import groupby
 import argparse
 import random
 import torch 
 from copolymer_set_transformer.copolymer_set_transformer import *
 from copolymer_set_transformer.ml_modules import *
 from sklearn.preprocessing import MinMaxScaler
-from itertools import chain
-from typing import Optional
 from copolymer_set_transformer.monomer_representations import get_train_data_representation_dft
 import ast
-from scipy.signal import find_peaks, find_peaks_cwt
 import os
 from scipy.signal import savgol_filter
 
@@ -88,7 +83,8 @@ def main():
     # Train the model
     losses1, losses2 = model.train_model(train_data_1, train_data_2,train_data_3, y_lab, y_abs)
 
-    import os
+    
+    os.makedirs(args.save_dir, exist_ok=True)
     torch.save({'state_dict':model.state_dict()},
         os.path.join(args.save_dir, 'co_polymer_set_transformer_new_model.tar'))
 if __name__ == "__main__":
