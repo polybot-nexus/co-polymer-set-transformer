@@ -13,13 +13,13 @@ def smile_to_bits(smile):
 
 
 def get_vectors(smiles):
-  paws = []
+  bits = []
   for smile in smiles:
     try:
-      paws.append(np.asarray(smile_to_bits(smile)))
+      bits.append(np.asarray(smile_to_bits(smile)))
     except:
-      paws.append(np.zeros(1024))
-  return paws
+      bits.append(np.zeros(1024))
+  return bits
 
 
 def bits_to_df(smiles, prefix):
