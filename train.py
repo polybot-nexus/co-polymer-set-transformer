@@ -55,7 +55,6 @@ def get_scaled_lab(dataset):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    # parser.add_argument('--model', default= 'morgan', choices = ['gnn', 'morgan', 'chemberta', 'mordred'] , help='The model to use for training')
     parser.add_argument('--training_data', help='The csv file with the training smiles pairs')
     parser.add_argument('--dropout_ratio', help='Set the dropout_ratio')
     parser.add_argument('--save_dir', help='The directory to save the trained network')
@@ -88,7 +87,9 @@ def main():
     y_abs = np.array(get_smoothed_intensity(electrochromics), dtype=np.float16)
     # Train the model
     losses1, losses2 = model.train_model(train_data_1, train_data_2,train_data_3, y_lab, y_abs)
-    # model._save_to_state_dict(args.save_dir)
 
+    import os
+    torch.save({'state_dict':model.state_dict()},
+        os.path.join(args.save_dir, 'co_polymer_set_transformer_new_model.tar'))
 if __name__ == "__main__":
    main()

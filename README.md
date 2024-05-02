@@ -45,7 +45,7 @@ The two last columns, i.e., wavelength and intensity can be omitted if only the 
 
 Example
 
-    python copolymer_set_transformer/train.py --model morgan --training_data datasets/literature_only_dataset_with_abs.csv --save_dir checkpoints -n_epochs 10 -lr 0.001 --use_abs_decoder
+    python train.py --training_data "datasets/electrochromics_in_house_experiments_with_abs.csv" --save_dir checkpoints -n_epochs 10 -lr 0.01 --dropout_ratio 0.15
 
 
 # Notebooks
