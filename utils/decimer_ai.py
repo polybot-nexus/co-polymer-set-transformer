@@ -1,3 +1,4 @@
+# The decimerai code should be install from this repo: https://github.com/Kohulan/DECIMER-Image-Segmentation
 from DECIMER import predict_SMILES
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
