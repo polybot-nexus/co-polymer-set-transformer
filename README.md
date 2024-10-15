@@ -54,3 +54,4 @@ Example
 - ```3_sequential_learning.ipynb``` Model performance on in-house data and finetune it on new data
 - ```4_physical_insights.ipynb``` After having a full operational model we try to extract feature importances
 - ```5_LLM_asssistants_contition_extraction_demo.ipynb``` We used the best performing fine-tuned model to guide the autonomous experiment
+- ```6_img2Lab_example.ipynb``` An example using Plot2Spectra for image data extraction from abs spectra
