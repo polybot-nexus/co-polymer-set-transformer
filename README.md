@@ -31,7 +31,7 @@ The two last columns, i.e., wavelength and intensity can be omitted if only the 
 
 # Train your own models based on the prefered monomer representation
 
-    python train.py --model <model> --training_data <data> --save_dir <save_dir> -n_epochs <epochs> -lr <learning_rate> --abs_prediction
+    python train.py --model <model> --training_data <data> --save_dir <save_dir> -n_epochs <epochs> -lr <learning_rate> ----use_abs_decoder
 
 - `model` The molecular embeddings to use. Choose among:
     - morgan
@@ -39,6 +39,7 @@ The two last columns, i.e., wavelength and intensity can be omitted if only the 
     - mordred
 - `training_data` The location of the .csv file containing the molecular pairs for training
 - `save_dir` The directory to save the trained model 
+- `dropout_ratio` The dropout ratio
 - `n_epochs` The number of epochs to use for training    
 - `lr` Learning rate
 - `use_abs_decoder` Set is to `True` to request absorption spectra prediction 
