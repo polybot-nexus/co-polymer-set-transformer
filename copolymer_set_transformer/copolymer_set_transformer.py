@@ -109,7 +109,7 @@ class CoPolymerSetTransformer(nn.Module):
             criterion2 = nn.MSELoss()
             losses2 = []     
         
-        for epoch in tqdm.tqdm(range(self.epochs)):
+        for _ in tqdm.tqdm(range(self.epochs)):
             #if y_lab is not None:
             for x, y in DataLoader(MonomerPair(data1, data2, data3, y_lab), batch_size=self.batch_size):
                 x, y = x.to(self.device).float(), y.to(self.device).float()
