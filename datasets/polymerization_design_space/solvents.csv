@@ -1,0 +1,4 @@
+﻿solvents,solvents-smiles,solvents-polarity_index,solvents-dipole_moment,solvents-dielectric_constant,solvents-MW,solvents-topological_polar_surface_area,solvents-XLogP3
+DMAc,CC(=O)N(C)C,6.5,3.72,37.78,87.12,20.3,-0.8
+Toluene,CC1=CC=CC=C1 ,2.4,0.31,2.38,92.14,0,2.7
+THF,C1CCOC1,4,1.73,7.6,72.11,9.2,0.5

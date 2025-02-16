@@ -1,0 +1,4 @@
+﻿base,base-smiles,base-ph,base-MW,base-topological_polar_surface_area,base-rotatable_bond_count,base-HBA,base-HBD,base-heavy_atom_count
+K2CO3,[K+].[K+].[O-]C([O-])=O,11.5,138.21,63.2,0,3,0,6
+K3PO4,[K].OP(O)(O)=O,11.8,212.27,86.2,0,4,0,8
+NaOtBu,CC(C)(C)[O-].[Na+],12,96.1,23.1,0,1,0,6
