@@ -9,8 +9,8 @@ We recommend installing the package by following the instructions below.
 ```
 conda create --name polybot_ecps_env python=3.12.2
 conda activate polybot_ecps_env
-git clone https://github.com/lrcfmd/Co-Polymer-SetTransformer.git
-cd Co-Polymer-SetTransformer
+git clone https://github.com/lrcfmd/co-polymer-set-transformer.git
+cd co-polymer-set-transformer
 pip install -r requirements.txt
 ```
 
